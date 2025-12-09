@@ -13,7 +13,7 @@ def get_date_params():
     current_date = datetime.today()
     one_day_delta = timedelta(days=1)
     seconds_delta = timedelta(seconds=24 * 3600 - 1)
-    date_from, date_to, *rest = sys.argv[1:]
+    date_from, date_to, *rest = sys.argv[1:] if len(sys.argv[1:]) >= 2 else [None, None]
     try:
         date_from = datetime.strptime(date_from, '%Y-%m-%d')
     except:
@@ -72,4 +72,4 @@ if __name__ == '__main__':
     except Exception as e:
         file_name = None
         error = e
-    print(json.dumps({'file_name': file_name, 'error': error}))
+    print(json.dumps({'file_name': file_name, 'error': str(error)}))
