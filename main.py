@@ -27,7 +27,7 @@ def get_date_params():
 
 def get_database_url():
     DATABASE_URL = os.getenv('DATABASE_URL')
-    driver = pyodbc.drivers()[-1]
+    driver = [driver for driver in pyodbc.drivers() if 'SQL Server' in driver][-1]
     return f"{DATABASE_URL};DRIVER={{{driver}}};"
 
 def get_columns(columns):
