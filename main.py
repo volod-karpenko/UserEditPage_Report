@@ -7,7 +7,8 @@ import sys
 import json
 
 load_dotenv(override=True)
-PATH_TO_REPORTS_FOLDER = os.path.join(os.getcwd(), 'reports')
+REAL_PATH = os.path.realpath(__file__)
+PATH_TO_REPORTS_FOLDER = os.path.join(os.path.dirname(REAL_PATH), 'reports')
 
 def get_date_params():
     current_date = datetime.today()
