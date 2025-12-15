@@ -63,7 +63,6 @@ def get_file_name(date_from, date_to):
     return f'ReportFrom{date_from_text}To{date_to_text}__{timestamp:.0f}.xlsx'
 
 def write_excel(data):
-    print(data)
     file_name = get_file_name(date_from=date_from, date_to=date_to)
     file_name = os.path.join(PATH_TO_REPORTS_FOLDER, file_name)
     writer = pd.ExcelWriter(file_name, engine='openpyxl')
