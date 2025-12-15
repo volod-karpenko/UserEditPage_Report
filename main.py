@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import sys
 import json
+from openpyxl.utils import get_column_letter
 
 load_dotenv(override=True)
 REAL_PATH = os.path.realpath(__file__)
@@ -61,15 +62,27 @@ def get_file_name(date_from, date_to):
     timestamp = datetime.now().timestamp() * 1000
     return f'ReportFrom{date_from_text}To{date_to_text}__{timestamp:.0f}.xlsx'
 
+def write_excel(data):
+    print(data)
+    file_name = get_file_name(date_from=date_from, date_to=date_to)
+    file_name = os.path.join(PATH_TO_REPORTS_FOLDER, file_name)
+    writer = pd.ExcelWriter(file_name, engine='openpyxl')
+    data.to_excel(writer, sheet_name='Дані', index=False)
+    worksheet = writer.book.worksheets[0]
+    for i, column in enumerate(data.columns):
+        max_value_length = data[column].astype(str).map(len).max()
+        max_length = max(max_value_length if max_value_length > 0 else 0, len(column)) + 2
+        worksheet.column_dimensions[get_column_letter(i + 1)].width = max_length
+    writer.close()
+    return file_name
+
 if __name__ == '__main__':
     file_name = None
     error = None
     try:
         date_from, date_to = get_date_params()
         data = get_data(date_from=date_from, date_to=date_to)
-        file_name = get_file_name(date_from=date_from, date_to=date_to)
-        file_name = os.path.join(PATH_TO_REPORTS_FOLDER, file_name)
-        data.to_excel(file_name, sheet_name='Дані', index=False)
+        file_name = write_excel(data)
     except Exception as e:
         file_name = None
         error = e
